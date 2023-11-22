@@ -24,14 +24,11 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importStar(require("mongoose"));
-const shopingSchema = new mongoose_1.Schema({
-    montant: {
+const shopingItemSchema = new mongoose_1.Schema({
+    ProductPrice: {
         type: String,
         required: true,
-    },
-    userid: {
-        type: String, required: true, unique: true
     }
 });
-const Shoping = mongoose_1.default.model('Shoping', shopingSchema);
-exports.default = Shoping;
+const ShopingItem = mongoose_1.default.model('Category', shopingItemSchema);
+exports.default = ShopingItem;

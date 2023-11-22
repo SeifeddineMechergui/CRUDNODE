@@ -1,11 +1,6 @@
 import { Request, Response } from 'express';
-import Category from '../models/shopingModel';
+import Category, { ShopingDocument } from '../models/shopingModel';
 import Shoping from '../models/shopingModel';
-// Define your data model
-interface ShoppingItem {
-    _id: string;
-    productPrice: string;
-  }
 const shopingController = {
   getAllShoping: async (req: Request, res: Response) => {
     try {
@@ -56,67 +51,7 @@ const shopingController = {
     } catch (error) {
       res.status(500).json({ message: 'Error deleting the shopings' });
     }
-  },
-
-    updateList : async (req: Request, res: Response) => {
-    try {
-      const { id } = req.params;
-      const { montant } = req.body;
-      const { userid } = req.body;
-  
-      // Fetch the shopping item
-      const shoppingItem: ShoppingItem | null = await Shoping.findById(id);
-  
-      if (!shoppingItem) {
-        return res.status(404).json({ message: 'Shopping item not found' });
-      }
-  
-      // Assuming productPrice is a property of the shopping item
-      const productPrice = parseFloat(shoppingItem.productPrice.toString());
-      const parsedMontant = parseFloat(montant.toString());
-  
-      // Check if the parsed values are valid numbers
-      if (isNaN(productPrice) || isNaN(parsedMontant)) {
-        return res.status(400).json({ message: 'Invalid montant or product price' });
-      }
-  
-      // Compare parsedMontant with productPrice
-      if (parsedMontant > productPrice) {
-        // Update the shopping item
-        const updatedList = await Shoping.findByIdAndUpdate(
-          id,
-          { montant, userid },
-          { new: true }
-        );
-  
-        // Return the updated item and the difference
-        return res.status(200).json({
-          updatedList,
-          difference: parsedMontant - productPrice,
-        });
-      } else {
-        return res.status(400).json({ message: 'Montant should be greater than product price' });
-      }
-    } catch (error) {
-      console.error(error);
-      return res.status(500).json({ message: 'Error updating the shopping item' });
-    }
-  }
-  
-  
-  
-
-
-
-
-
-
-
-
-
-
-
-
-};
+  } 
+  };
 
 export default shopingController;

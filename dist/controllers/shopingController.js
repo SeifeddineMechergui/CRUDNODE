@@ -13,6 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const shopingModel_1 = __importDefault(require("../models/shopingModel"));
+const ShoppingItem_1 = __importDefault(require("../models/ShoppingItem"));
 const shopingController = {
     getAllShoping: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
@@ -66,41 +67,16 @@ const shopingController = {
             res.status(500).json({ message: 'Error deleting the shopings' });
         }
     }),
-    updateList: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    addList: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            const { id } = req.params;
-            const { montant } = req.body;
-            const { userid } = req.body;
-            // Fetch the shopping item
-            const shoppingItem = yield shopingModel_1.default.findById(id);
-            if (!shoppingItem) {
-                return res.status(404).json({ message: 'Shopping item not found' });
-            }
-            // Assuming productPrice is a property of the shopping item
-            const productPrice = parseFloat(shoppingItem.productPrice.toString());
-            const parsedMontant = parseFloat(montant.toString());
-            // Check if the parsed values are valid numbers
-            if (isNaN(productPrice) || isNaN(parsedMontant)) {
-                return res.status(400).json({ message: 'Invalid montant or product price' });
-            }
-            // Compare parsedMontant with productPrice
-            if (parsedMontant > productPrice) {
-                // Update the shopping item
-                const updatedList = yield shopingModel_1.default.findByIdAndUpdate(id, { montant, userid }, { new: true });
-                // Return the updated item and the difference
-                return res.status(200).json({
-                    updatedList,
-                    difference: parsedMontant - productPrice,
-                });
-            }
-            else {
-                return res.status(400).json({ message: 'Montant should be greater than product price' });
-            }
+            const { productPrice } = req.body;
+            const ShoppingItems = new ShoppingItem_1.default({ productPrice });
+            yield ShoppingItems.save();
+            res.status(201).json(ShoppingItems);
         }
         catch (error) {
-            console.error(error);
-            return res.status(500).json({ message: 'Error updating the shopping item' });
+            res.status(500).json({ message: 'Error adding a list' });
         }
-    })
+    }),
 };
 exports.default = shopingController;

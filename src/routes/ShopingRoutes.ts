@@ -1,11 +1,10 @@
 import express from 'express';
-import categoryController from '../controllers/shopingController';
+import shopingController from '../controllers/shopingController';
 
 const router = express.Router();
 
-router.get('/', categoryController.getAllShoping);
-router.put('/list',categoryController.updateList)
-router.post('/', categoryController.addShoping);
-router.put('/:id', categoryController.updateshopings);
-router.delete('/:id', categoryController.deleteshopings);
+router.get('/', shopingController.getAllShoping);
+router.post('/', shopingController.addShoping);
+router.put('/:id', shopingController.updateshopings);
+router.delete('/:id', shopingController.deleteshopings);
 export default router;
